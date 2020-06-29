@@ -10,6 +10,17 @@
   "dependencies": {
     "@slack/bolt": "^2.1.1",
     "@types/node": "^14.0.14",
+    "deta": "^0.0.6",
+    "express": "^4.17.1",
     "typescript": "^3.9.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "ts-node": "^8.10.2"
+  },
+  "scripts": {
+    "start": "node src/index.ts",
+    "dev": "nodemon src/index.ts",
+    "test": "echo 'TODO'"
   }
 }
