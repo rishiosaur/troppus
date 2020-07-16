@@ -1,8 +1,9 @@
 import { firestore } from "./../firebase/";
+// import firebase from 'firebase'
 
 import { App } from "@slack/bolt";
 import { filterChannelType, filterNoBotMessages } from "../middleware/index";
-import { token } from '../config';
+import { token, adminChannel } from '../config';
 
 const submitPost = (app: App) => {
   app.message(
@@ -30,7 +31,7 @@ const submitPost = (app: App) => {
 
       app.client.chat
         .postMessage({
-          channel: "C01618Q87PY",
+          channel: adminChannel,
           text: "",
 
           blocks: [
@@ -95,6 +96,7 @@ const submitPost = (app: App) => {
 
           token: token,
         })
+        .then(async ({ ts }) => firestore.collection("messages").doc(id).set({ts: ts}, {merge: true}))
         .catch(console.log);
     }
   );
