@@ -2,7 +2,7 @@ import { App, SlackActionMiddlewareArgs } from '@slack/bolt';
 import firebase from '../firebase/'
 import { firestore } from '../firebase/index';
 // import firebase from 'firebase';
-import { token } from '../config';
+import { token, adminChannel } from '../config';
 
 const reviewPostActions = (app: App) => {
     app.action('post_approve', async ({ack, body, action}) => {
@@ -15,17 +15,17 @@ const reviewPostActions = (app: App) => {
             status: "approved"
         }, { merge: true })
 
-        const message = await ref.get().then(e => e.data());
+        const { msg, uid, to, hashedUid, ts } = await ref.get().then(e => e.data());
 
         await app.client.chat.postEphemeral({
-            channel: message.to,
-            user: message.to,
+            channel: to,
+            user: to,
             blocks: [
                 {
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": `:bell:  New Message from ${message.hashedUid}`
+                        "text": `:bell:  New Message from ${hashedUid}`
                     }
                 },
                 {
@@ -35,7 +35,7 @@ const reviewPostActions = (app: App) => {
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": `> ${message.msg}`
+                        "text": `> ${msg}`
                     }
                 }
             ],
@@ -44,13 +44,55 @@ const reviewPostActions = (app: App) => {
         })
 
         await app.client.chat.postEphemeral({
-            channel: message.uid,
-            user: message.uid,
-            text: `Your message to <@${message.to}> has been approved and sent anonymously.`,
+            channel: uid,
+            user: uid,
+            text: `Your message to <@${to}> has been approved and sent anonymously.`,
             token: token
         })
 
-        await app.client.chat.
+        console.log(ts)
+
+        await app.client.chat.update({
+            channel: adminChannel,
+            text: "awef",
+            blocks: 
+                [
+                    {
+                        type: "section",
+                        text: {
+                          type: "mrkdwn",
+                          text: ":white_check_mark: *Submission approved!*"
+                        },
+                      },
+                      {
+                        type: "section",
+                        fields: [
+                          {
+                            type: "mrkdwn",
+                            text: `*From:*\nh${hashedUid}`,
+                          },
+                          {
+                            type: "mrkdwn",
+                            text: `*To:*\n${to}`,
+                          },
+                        ],
+                      },
+                      {
+                        type: "divider",
+                      },
+                      {
+                        type: "section",
+                        text: {
+                          type: "mrkdwn",
+                          text:
+                            `> ${msg}`,
+                        },
+                      },
+                ]
+            ,
+            ts: ts,
+            token: token
+        }).then(x => console.log(x)).catch(console.log)
     })
 
     app.action('post_reject', async ({ack, say, context}) => {
