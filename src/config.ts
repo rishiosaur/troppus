@@ -8,3 +8,4 @@ export const storageBucket=process.env.storageBucket;
 export const messagingSenderId=process.env.messagingSenderId;
 export const appId=process.env.appId;
 export const measurementId=process.env.measurementId;
+export const adminChannel=process.env.adminChannel;
