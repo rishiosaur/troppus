@@ -8,10 +8,8 @@ const app = new App({
     signingSecret: signing_secret
 });
 
-// require('dotenv').config()
-
 (async () => {
-      // Start your app
+      // Start your appz
   await app.start(process.env.PORT || 3000);
 
   console.log('Troppus is running!');
@@ -20,11 +18,5 @@ const app = new App({
       handler(app);
       console.log(`Feature "${feature}" has been loaded.`)
   }
-
-//   app.action("post_approve", async ({ ack }) => {
-//       await ack();
-
-//       console.log("message approved")
-//   })
   
 })()
