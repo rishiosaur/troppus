@@ -5,6 +5,7 @@ import {
   approvedMessageDm,
   approvedSubmission,
 } from "../blocks/approvedSubmission";
+import { rejectedSubmission } from '../blocks/rejectedSubmission';
 
 const reviewPostActions = (app: App) => {
   app.action("post_approve", async ({ ack, body, action }) => {
@@ -14,6 +15,7 @@ const reviewPostActions = (app: App) => {
       .firestore()
       .collection("messages")
       .doc((action as any).value);
+
     await ref.set(
       {
         status: "approved",
@@ -53,8 +55,33 @@ const reviewPostActions = (app: App) => {
       .catch(console.log);
   });
 
-  app.action("post_reject", async ({ ack, say, context }) => {
+  app.action("post_reject", async ({ ack, say, action, context }) => {
     await ack();
+
+    const ref = firebase
+    .firestore()
+    .collection("messages")
+    .doc((action as any).value);
+
+    await ref.set({ status: "rejected" }, { merge: true });
+
+    const { msg, to, uid, hashedUid, ts } = await ref.get().then(e=>e.data());
+
+    await app.client.chat.postEphemeral({
+        text: `Your message to <@${to}> was rejected.`,
+        channel: uid,
+        user: uid,
+        token: token,
+        
+    }).catch(console.log)
+
+    await app.client.chat.update({
+        channel: adminChannel,
+        text: "",
+        blocks: rejectedSubmission(msg, to, hashedUid),
+        ts: ts,
+        token: token
+    }).catch(console.log)
   });
 };
 
