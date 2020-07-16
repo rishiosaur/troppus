@@ -1,7 +1,5 @@
 import { App, SlackActionMiddlewareArgs } from "@slack/bolt";
 import firebase from "../firebase/";
-import { firestore } from "../firebase/index";
-// import firebase from 'firebase';
 import { token, adminChannel } from "../config";
 import {
   approvedMessageDm,
@@ -16,8 +14,6 @@ const reviewPostActions = (app: App) => {
       .firestore()
       .collection("messages")
       .doc((action as any).value);
-    // update status of message in firestore
-    // send message to user
     await ref.set(
       {
         status: "approved",
