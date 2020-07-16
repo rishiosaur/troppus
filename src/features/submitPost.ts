@@ -15,7 +15,9 @@ const submitPost = (app: App) => {
       const to = context.matches[1];
       const msg = context.matches[2];
 
-      say(`Your message to <@${to}> has been submitted for review!`);
+      say({
+          text: `Your message to <@${to}> was sent for review.`,
+      });
 
       const { id } =await firebase.firestore()
         .collection("messages")
