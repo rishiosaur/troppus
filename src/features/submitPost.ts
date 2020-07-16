@@ -92,7 +92,7 @@ const submitPost = (app: App) => {
                 },
               ],
             },
-          ] as any,
+          ],
 
           token: token,
         })
