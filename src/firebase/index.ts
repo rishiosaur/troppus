@@ -1,6 +1,5 @@
 import * as config from '../config';
-
-const firebase = require ("firebase")
+const firebase = require("firebase");
 
 const firebaseConfig = {
     apiKey: config.apiKey,
