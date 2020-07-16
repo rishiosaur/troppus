@@ -47,13 +47,14 @@ export const newSubmission = (msg: string, to: string, hashedUid: string, id: st
             },
             {
               type: "button",
+              action_id: "post_reject",
               text: {
                 type: "plain_text",
                 emoji: true,
                 text: "Deny",
               },
               style: "danger",
-              value: "click_me_123",
+              value: id,
             },
           ],
         },
