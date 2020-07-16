@@ -16,7 +16,7 @@ export const approvedSubmission = (msg: string, to: string, hashedUid: string) =
               },
               {
                 type: "mrkdwn",
-                text: `*To:*\n${to}`,
+                text: `*To:*\n<@${to}>`,
               },
             ],
           },
