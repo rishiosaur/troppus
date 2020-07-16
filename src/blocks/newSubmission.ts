@@ -16,7 +16,7 @@ export const newSubmission = (msg: string, to: string, hashedUid: string, id: st
             },
             {
               type: "mrkdwn",
-              text: `*To:*\n${to}`,
+              text: `*To:*\n<@${to}>`,
             },
           ],
         },
