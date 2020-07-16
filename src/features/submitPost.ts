@@ -1,10 +1,8 @@
-import { firestore } from "./../firebase/";
-// import firebase from 'firebase'
-
 import { App } from "@slack/bolt";
 import { filterChannelType, filterNoBotMessages } from "../middleware/index";
 import { token, adminChannel } from '../config';
 import { newSubmission } from '../blocks/newSubmission';
+import firebase from '../firebase/index';
 
 const submitPost = (app: App) => {
   app.message(
@@ -19,7 +17,7 @@ const submitPost = (app: App) => {
 
       say(`Your message to <@${to}> has been submitted for review!`);
 
-      const { id } =await firestore
+      const { id } =await firebase.firestore()
         .collection("messages")
         .add({
           uid,
@@ -39,7 +37,10 @@ const submitPost = (app: App) => {
 
           token: token,
         })
-        .then(async ({ ts }) => firestore.collection("messages").doc(id).set({ts: ts}, {merge: true}))
+        .then(async (x) => {
+            console.log(x.ts)
+            await firebase.firestore().collection("messages").doc(id).set({ts: x.ts}, {merge: true})
+        })
         .catch(console.log);
     }
   );
