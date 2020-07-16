@@ -50,7 +50,6 @@ const reviewPostActions = (app: App) => {
         ts: ts,
         token: token,
       })
-      .then((x) => console.log(x))
       .catch(console.log);
   });
 

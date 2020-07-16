@@ -4,6 +4,7 @@ import { firestore } from "./../firebase/";
 import { App } from "@slack/bolt";
 import { filterChannelType, filterNoBotMessages } from "../middleware/index";
 import { token, adminChannel } from '../config';
+import { newSubmission } from '../blocks/newSubmission';
 
 const submitPost = (app: App) => {
   app.message(
@@ -34,65 +35,7 @@ const submitPost = (app: App) => {
           channel: adminChannel,
           text: "",
 
-          blocks: [
-            {
-              type: "section",
-              text: {
-                type: "mrkdwn",
-                text: ":bell: *You have a new submission!*"
-              },
-            },
-            {
-              type: "section",
-              fields: [
-                {
-                  type: "mrkdwn",
-                  text: `*From:*\nh${hashedUid}`,
-                },
-                {
-                  type: "mrkdwn",
-                  text: `*To:*\n${to}`,
-                },
-              ],
-            },
-            {
-              type: "divider",
-            },
-            {
-              type: "section",
-              text: {
-                type: "mrkdwn",
-                text:
-                  `> ${msg}`,
-              },
-            },
-            {
-              type: "actions",
-              elements: [
-                {
-                  type: "button",
-                  text: {
-                    type: "plain_text",
-                    emoji: true,
-                    text: "Approve :white_check_mark:",
-                  },
-                  style: "primary",
-                  action_id: "post_approve",
-                  value: id
-                },
-                {
-                  type: "button",
-                  text: {
-                    type: "plain_text",
-                    emoji: true,
-                    text: "Deny",
-                  },
-                  style: "danger",
-                  value: "click_me_123",
-                },
-              ],
-            },
-          ],
+          blocks: newSubmission(msg, to, hashedUid, id),
 
           token: token,
         })
