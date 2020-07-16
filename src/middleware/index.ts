@@ -1,4 +1,3 @@
-// import { SlackEventMiddlewareArgs, MessageEvent } from "@slack/bolt"
 const filterEvent = filterFn => async ({ event, next }) => {
         if (filterFn(event)) {
             await next()
